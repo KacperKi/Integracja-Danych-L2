@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
 
 public class Main {
 
@@ -42,7 +43,7 @@ public class Main {
     JButton ImportButton, SaveButtonData;
     JTable tableWithData;
     JScrollPane scrollPane;
-    Object[][] dataToSave;
+    DefaultTableModel modelTableAfterChange;
     DefaultTableModel model;
 
     public Main() {
@@ -80,7 +81,10 @@ public class Main {
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
         ReadDataFromFile();                         //Import all data from txt file
-        if(scrollPane == null) ShowTable();
+        if(scrollPane == null) {
+            ShowTable();
+            TableWasChangedListenerCreate();
+        }
         else {
             this.model= new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
             this.tableWithData.setModel(model);
@@ -115,6 +119,36 @@ public class Main {
             System.out.println(e);
         }
     }
+    void TableWasChangedListenerCreate(){
+        this.tableWithData.getModel().addTableModelListener(e -> {
+
+            String newValue = tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()).toString();
+
+            if(!dataToTable.get(e.getLastRow()).get(e.getColumn()).equals(newValue)) {
+                if(!ValidateDataInTable(e.getColumn(), newValue)){
+                    //Information about validation!
+                    JOptionPane.showMessageDialog(
+                            mainFrame,
+                            "It was changed -"
+                                    + " column: " + (e.getColumn() + 1)
+                                    + " row: " + (e.getLastRow() + 1)
+                                    + "\nNew value: " + tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn())
+                                    + "\nThis is an invalid value for a variable!",
+                            "WARNING - Incorrect Data!",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(
+                            mainFrame,
+                            "It was changed -"
+                                    + " column: " + (e.getColumn() + 1)
+                                    + " row: " + (e.getLastRow() + 1)
+                                    + "\nNew value: " + tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()),
+                            "Data was changed!",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+    }
     Object[][] ConvertDataToObject(ArrayList<ArrayList<String>> data){
         int row = data.size();
         int column = data.get(0).size();
@@ -136,6 +170,10 @@ public class Main {
         this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
         this.tableWithData = new JTable(model);
         this.scrollPane = new JScrollPane(tableWithData, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        tableWithData.getTableHeader().setReorderingAllowed(false);
+        tableWithData.getTableHeader().setResizingAllowed(false);
+
         scrollPane.setEnabled(true);
         scrollPane.setBounds(10, 45, 1700, 250);
         scrollPane.setVisible(true);
@@ -145,15 +183,31 @@ public class Main {
         mainFrame.invalidate();
         mainFrame.validate();
         mainFrame.repaint();
+    }
 
-        tableWithData.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-//                dataToSave = tableWithData.getModel().
-                System.out.println("It was changed col: " + e.getColumn() + " row: " + e.getLastRow()
-                        + " val: " + tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()));
-            }
-        });
+    boolean ValidateDataInTable(int numberOfColumn, String value){
+
+        String[] regex = {
+                "[a-zA-Z]{2,10}",           //nazwa producenta
+                "\\d+(?:\\.\\d+)?\"",
+                "",
+                "",
+                "",
+                "",
+                "\\d{1,2}",                 // liczba rdzeni
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+        };
+
+
+        if(!value.matches(regex[numberOfColumn])) return false;
+        else return true;
     }
 
 }
