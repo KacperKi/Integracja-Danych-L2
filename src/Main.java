@@ -42,7 +42,6 @@ public class Main {
     JButton ImportButton, SaveButtonData;
     JTable tableWithData;
     JScrollPane scrollPane;
-    DefaultTableModel modelTableAfterChange;
     DefaultTableModel model;
 
     public Main() {
@@ -111,15 +110,28 @@ public class Main {
             this.pathToSaveFile = String.valueOf(chooser.getSelectedFile());
         }
 
-        File f = new File(pathToSaveFile);
-        if(f.exists()) {
-            int n = JOptionPane.showConfirmDialog(
-                    mainFrame, "Overwrite the specified file?",
-                    "File exists!",
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
+        if(pathToSaveFile!=null) {
+            File f = new File(pathToSaveFile);
+            if (f.exists()) {
+                int n = JOptionPane.showConfirmDialog(
+                        mainFrame, "Overwrite the specified file?",
+                        "File exists!",
+                        JOptionPane.YES_NO_OPTION);
+                if (n == JOptionPane.YES_OPTION) {
+                    saveToFileData();
+                }
+            }else {
                 saveToFileData();
             }
+
+        }
+        else {
+            JOptionPane.showConfirmDialog(
+                    mainFrame,
+                    "Ther's no output file selected!!",
+                    "Error!",
+                    JOptionPane.OK_OPTION
+            );
         }
     }
     void PrintInformationAndSelectFileWithData(){
@@ -166,6 +178,8 @@ public class Main {
                                     + "\nThis is an invalid value for a variable!",
                             "WARNING - Incorrect Data!",
                             JOptionPane.WARNING_MESSAGE);
+                    this.model.setValueAt(dataToTable.get(e.getFirstRow()).get(e.getColumn()),e.getFirstRow(), e.getColumn());
+                    this.tableWithData.setModel(model);
                 } else {
                     JOptionPane.showMessageDialog(
                             mainFrame,
@@ -175,6 +189,7 @@ public class Main {
                                     + "\nNew value: " + tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()),
                             "Data was changed!",
                             JOptionPane.INFORMATION_MESSAGE);
+
                 }
             }
 
@@ -215,14 +230,24 @@ public class Main {
         mainFrame.validate();
         mainFrame.repaint();
     }
-
     void saveToFileData() throws FileNotFoundException {
         PrintWriter output = new PrintWriter(pathToSaveFile);
-        //save to file - continue 
-        output.println("x");
-        output.print("yo;yo;");
+        String rowToInsert = "";
 
+        for(int i=0; i<tableWithData.getRowCount(); i++){
+            rowToInsert = "";
+            for(int j=0; j<tableWithData.getColumnCount();j++){
+                rowToInsert += (tableWithData.getModel().getValueAt(i,j) + ";");
+            }
+            output.println(rowToInsert);
+        }
         output.close();
+        JOptionPane.showMessageDialog(
+                mainFrame,
+                "Operation successful!\n" + "Path to your file: " + pathToSaveFile,
+                "Information!",
+                JOptionPane.WARNING_MESSAGE
+        );
     }
     boolean ValidateDataInTable(int numberOfColumn, String value){
         String[] regex = {
