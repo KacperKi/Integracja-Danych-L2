@@ -7,8 +7,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -18,7 +17,7 @@ public class Main {
     public static void main(String[] args){
         new Main();
     }
-    String pathToFile;
+    String pathToFile, pathToSaveFile;
     ArrayList<String> nameOfColumnsFromFile = new ArrayList<String>() {
         {
             add("nazwa producenta");
@@ -74,20 +73,53 @@ public class Main {
         SaveButtonData.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //w
+                try {
+                    ExportButtonFunction();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
-        ReadDataFromFile();                         //Import all data from txt file
-        if(scrollPane == null) {
-            ShowTable();
-            TableWasChangedListenerCreate();
+        if(pathToFile!=null) {
+            ReadDataFromFile();                         //Import all data from txt file
+            if (scrollPane == null) {
+                ShowTable();
+                TableWasChangedListenerCreate();
+            } else {
+                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+                this.tableWithData.setModel(model);
+            }
+
         }
         else {
-            this.model= new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
-            this.tableWithData.setModel(model);
+            JOptionPane.showMessageDialog(
+                    mainFrame,
+                    "Empty path to txt file!",
+                    "Empty path!",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    void ExportButtonFunction() throws IOException {
+        JFileChooser chooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only txt files", "txt");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(mainFrame);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            this.pathToSaveFile = String.valueOf(chooser.getSelectedFile());
+        }
+
+        File f = new File(pathToSaveFile);
+        if(f.exists()) {
+            int n = JOptionPane.showConfirmDialog(
+                    mainFrame, "Overwrite the specified file?",
+                    "File exists!",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION) {
+                saveToFileData();
+            }
         }
     }
     void PrintInformationAndSelectFileWithData(){
@@ -121,9 +153,7 @@ public class Main {
     }
     void TableWasChangedListenerCreate(){
         this.tableWithData.getModel().addTableModelListener(e -> {
-
             String newValue = tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()).toString();
-
             if(!dataToTable.get(e.getLastRow()).get(e.getColumn()).equals(newValue)) {
                 if(!ValidateDataInTable(e.getColumn(), newValue)){
                     //Information about validation!
@@ -147,6 +177,7 @@ public class Main {
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }
+
         });
     }
     Object[][] ConvertDataToObject(ArrayList<ArrayList<String>> data){
@@ -185,28 +216,37 @@ public class Main {
         mainFrame.repaint();
     }
 
-    boolean ValidateDataInTable(int numberOfColumn, String value){
+    void saveToFileData() throws FileNotFoundException {
+        PrintWriter output = new PrintWriter(pathToSaveFile);
+        //save to file - continue 
+        output.println("x");
+        output.print("yo;yo;");
 
+        output.close();
+    }
+    boolean ValidateDataInTable(int numberOfColumn, String value){
         String[] regex = {
                 "[a-zA-Z]{2,10}",           //nazwa producenta
-                "\\d+(?:\\.\\d+)?\"",
-                "",
-                "",
-                "",
-                "",
+                "\\d+(?:\\.\\d+)?\"",       //wielkosc matrycy
+                "\\d{1,4}+x\\d{1,4}",       //rodzielczosc resolution
+                "[a-zA-Z{4,12}]",           //rodzaj matrycy
+                "^(?:Tak|Nie|TAK|NIE|tak|nie)$",//dotykowy ekran
+                "[a-zA-Z0-9 ]{4,10}",       //procesor
                 "\\d{1,2}",                 // liczba rdzeni
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
+                "[0-9]{3,4}$",              //taktowanie
+                "\\d{1,2}?GB",              //RAM
+                "\\d{1,5}?GB",              //pojemnosc dysku
+                "^(?:HDD|SSD)$",            //dysk
+                "[a-zA-Z0-9 ]{4,30}",       //układ graficzny
+                "\\d{1,2}?GB",              //pamięc grafiki
+                "[a-zA-Z0-9 ]{4,20}",       //system operacyjny
+                "[a-zA-Z-]{3,10}"           //napęd
         };
 
-
-        if(!value.matches(regex[numberOfColumn])) return false;
+        if(!value.equals("brak")) {
+            if(value.matches(regex[numberOfColumn])) return true;
+            else return false;
+        }
         else return true;
     }
 
