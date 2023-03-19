@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args){
         new Main();
     }
-    String pathToFile, pathToSaveFile;
+    String pathToFile, pathToSaveFile, pathToXMLFile;
     ArrayList<String> nameOfColumnsFromFile = new ArrayList<String>() {
         {
             add("nazwa producenta");
@@ -39,7 +39,7 @@ public class Main {
     };
     ArrayList<ArrayList<String>> dataToTable;
     JFrame mainFrame;
-    JButton ImportButton, SaveButtonData;
+    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData;
     JTable tableWithData;
     JScrollPane scrollPane;
     DefaultTableModel model;
@@ -54,11 +54,17 @@ public class Main {
         ImportButton = new JButton("Import data from TXT file");
         SaveButtonData = new JButton("Export data to TXT file");
 
+        ImportXMLButton = new JButton("Import data from XML file");
+        SaveXMLButtonData = new JButton("Export data to XML file");
+
         ImportButton.setBounds(10,5, 200, 30); SaveButtonData.setBounds(220, 5, 200,30);
         mainFrame.add(ImportButton); mainFrame.add(SaveButtonData);
 
+        ImportXMLButton.setBounds(430, 5, 200, 30); SaveXMLButtonData.setBounds(640, 5, 200, 30);
+        mainFrame.add(ImportXMLButton); mainFrame.add(SaveXMLButtonData);
+
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.setSize(450, 80);
+        mainFrame.setSize(900, 80);
         mainFrame.setLayout(null);
         mainFrame.setVisible(true);
     }
@@ -79,6 +85,18 @@ public class Main {
                 }
             }
         });
+        ImportXMLButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ImportXMLButtonFunction();
+            }
+        });
+        SaveXMLButtonData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ExportXMLButtonFunction();
+            }
+        });
     }
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
@@ -91,7 +109,6 @@ public class Main {
                 this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
                 this.tableWithData.setModel(model);
             }
-
         }
         else {
             JOptionPane.showMessageDialog(
@@ -134,6 +151,31 @@ public class Main {
             );
         }
     }
+    void ImportXMLButtonFunction(){
+        PrintInformationAndSelectXMLFileWithData();
+        if(pathToXMLFile!=null){
+            //readData
+            if(scrollPane == null){
+                //showTable();
+                //TableWasChangedListenerCreate();
+            }
+            else {
+                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+                this.tableWithData.setModel(model);
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(
+                    mainFrame,
+                    "Empty path to XML file!",
+                    "Empty path!",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    void ExportXMLButtonFunction(){
+
+    }
+
     void PrintInformationAndSelectFileWithData(){
         JFileChooser chooser = new JFileChooser(pathToFile);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only txt files", "txt");
@@ -144,6 +186,17 @@ public class Main {
             pathToFile = String.valueOf(chooser.getSelectedFile());
         }
     }
+    void PrintInformationAndSelectXMLFileWithData(){
+        JFileChooser chooser = new JFileChooser(pathToFile);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only XML files", "xml");
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(mainFrame);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("You chose to open this file: " + chooser.getSelectedFile());
+            pathToXMLFile = String.valueOf(chooser.getSelectedFile());
+        }
+    }
+
     void ReadDataFromFile() {
         dataToTable = new ArrayList<>();
         if(dataToTable.size() != 0) dataToTable.clear();
