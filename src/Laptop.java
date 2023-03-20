@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Laptop {
     String producentLaptopa;
     String przekatnaEkranu;
@@ -155,20 +157,30 @@ public class Laptop {
     public void setNapedFizyczny(String napedFizyczny) {
         this.napedFizyczny = napedFizyczny;
     }
-}
 
-//    add("nazwa producenta");
-//    add("przekątna ekranu");
-//    add("rozdzielczość ekranu");
-//    add("rodzaj powierzchni ekranu");
-//    add("ekran dotykowy");
-//    add("nazwa procesora");
-//    add("liczba rdzeni fizycznych");
-//    add("prędkość taktowania MHz");
-//    add("pamięć RAM");
-//    add("pojemność dysku");
-//    add("rodzaj dysku");
-//    add("nazwa układu graficznego");
-//    add("pamięć układu graficznego");
-//    add("nazwa systemu operacyjnego");
-//    add("rodzaj napędu fizycznego");
+
+    public ArrayList<String> convertClassToArrayList(){
+        ArrayList<String> arrayList = new ArrayList<>();
+        arrayList.add(this.producentLaptopa);
+        arrayList.add(this.przekatnaEkranu);
+        arrayList.add(this.rozdzielczoscEkranu);
+        arrayList.add(this.rodzajPowierzchni);
+        arrayList.add(this.czyDotykowyEkran);
+        arrayList.add(this.nazwaProcesora);
+        arrayList.add(this.liczbaRdzeni);
+        arrayList.add(this.predkoscProcesora);
+        arrayList.add(this.pamiecRam);
+        arrayList.add(this.pojemnoscDysku);
+        arrayList.add(this.rodzajDysku);
+        arrayList.add(this.nazwaGrafiki);
+        arrayList.add(this.pamiecGrafiki);
+        arrayList.add(this.nazwaOs);
+        arrayList.add(this.napedFizyczny);
+        return arrayList;
+    }
+
+
+
+
+
+}

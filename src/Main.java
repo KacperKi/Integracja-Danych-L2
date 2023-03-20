@@ -164,9 +164,19 @@ public class Main {
         PrintInformationAndSelectXMLFileWithData();
         if(pathToXMLFile!=null){
             StAXParser parser = new StAXParser(pathToXMLFile);
-            parser.readData();
+            ArrayList<Laptop> xmlData = parser.readDatafromFile();
+            dataToTable = new ArrayList<>();
+            for(Laptop t: xmlData){
+                dataToTable.add(t.convertClassToArrayList());
+            }
 
-
+            if (scrollPane == null) {
+                ShowTable();
+                TableWasChangedListenerCreate();
+            } else {
+                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+                this.tableWithData.setModel(model);
+            }
         }
         else {
             JOptionPane.showMessageDialog(
@@ -200,7 +210,6 @@ public class Main {
             pathToXMLFile = String.valueOf(chooser.getSelectedFile());
         }
     }
-
     void ReadDataFromFile() {
         dataToTable = new ArrayList<>();
         if(dataToTable.size() != 0) dataToTable.clear();

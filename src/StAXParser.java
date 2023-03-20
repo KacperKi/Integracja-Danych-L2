@@ -24,7 +24,7 @@ public class StAXParser {
         }
     }
 
-    public ArrayList<Laptop> readData() throws XMLStreamException {
+    public ArrayList<Laptop> readDatafromFile() throws XMLStreamException {
         ArrayList<Laptop> listOfLaptop = new ArrayList<>();
         Laptop newLaptop = new Laptop();
 
@@ -39,11 +39,18 @@ public class StAXParser {
             if (nextEvent.isStartElement()) {
                 StartElement startElement = nextEvent.asStartElement();
 
+                XMLEvent next = reader.nextEvent();
+
                 switch(startElement.getName().getLocalPart()) {
                     case "manufacturer":
-                        newLaptop.setProducentLaptopa(
-                                reader.nextEvent().toString()
+
+                        if(!next.isEndElement()) {
+                            newLaptop.setProducentLaptopa(
+                                    next.toString()
                             );
+                        }else{
+                            newLaptop.setProducentLaptopa("brak");
+                        }
                         break;
                     case "screen":
                         Iterator<Attribute> t = startElement.getAttributes();
@@ -63,50 +70,78 @@ public class StAXParser {
                         }
                         break;
                     case "size":
-                        newLaptop.setPrzekatnaEkranu(
-                                reader.nextEvent().toString()
-                            );
+                        if(!next.isEndElement()) {
+                            newLaptop.setPrzekatnaEkranu(
+                                    next.toString()
+                                );
+                        }else{
+                            newLaptop.setPrzekatnaEkranu("brak");
+                        }
                         break;
                     case "resolution":
-                        newLaptop.setRozdzielczoscEkranu(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setRozdzielczoscEkranu(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setRozdzielczoscEkranu("brak");
+                        }
                         break;
                     case "type":
-                        newLaptop.setRodzajPowierzchni(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setRodzajPowierzchni(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setRodzajPowierzchni("brak");
+                        }
                         break;
                     case "name": //grafika i procesor
                         //check - processor first
-                        if(
-                                newLaptop.getNazwaProcesora() == null
-                                || newLaptop.getNazwaProcesora().equals("")
-                            ){
-                            newLaptop.setNazwaProcesora(
-                                    reader.nextEvent().toString()
-                            );
-                        }
-                        else{
-                            newLaptop.setNazwaGrafiki(
-                                    reader.nextEvent().toString()
-                            );
+                        if(!next.isEndElement()) {
+                            if(
+                                    newLaptop.getNazwaProcesora() == null
+                                    || newLaptop.getNazwaProcesora().equals("")
+                                ){
+                                newLaptop.setNazwaProcesora(
+                                        next.toString()
+                                );
+                            }
+                            else{
+                                newLaptop.setNazwaGrafiki(
+                                        next.toString()
+                                );
+                            }
+                        }else{
+                            newLaptop.setNazwaGrafiki("brak");
                         }
                         break;
                     case "physical_cores":
-                        newLaptop.setLiczbaRdzeni(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setLiczbaRdzeni(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setLiczbaRdzeni("brak");
+                        }
                         break;
                     case "clock_speed":
-                        newLaptop.setPredkoscProcesora(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setPredkoscProcesora(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setPredkoscProcesora("brak");
+                        }
                         break;
                     case "ram":
-                        newLaptop.setPamiecRam(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setPamiecRam(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setPamiecRam("brak");
+                        }
                         break;
                     case "disc":
                         Iterator<Attribute> k = startElement.getAttributes();
@@ -126,30 +161,45 @@ public class StAXParser {
                         }
                         break;
                     case "storage":
-                        newLaptop.setPojemnoscDysku(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                                newLaptop.setPojemnoscDysku(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setPojemnoscDysku("brak");
+                        }
                         break;
                     case "memory":
-                        newLaptop.setPamiecGrafiki(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setPamiecGrafiki(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setPamiecGrafiki("brak");
+                        }
                         break;
                     case "os":
-                        newLaptop.setNazwaOs(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setNazwaOs(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setNazwaOs("brak");
+                        }
                         break;
                     case "disc_reader":
-                        newLaptop.setNapedFizyczny(
-                                reader.nextEvent().toString()
-                        );
+                        if(!next.isEndElement()) {
+                            newLaptop.setNapedFizyczny(
+                                    next.toString()
+                            );
+                        }else{
+                            newLaptop.setNapedFizyczny("brak");
+                        }
                         break;
                     default:
                             break;
                 }
             }
-
             //end of single element of list
             if (nextEvent.isEndElement()) {
                 EndElement endElement = nextEvent.asEndElement();
@@ -160,8 +210,9 @@ public class StAXParser {
 
             }
         }
-
-
-        return null;
+        return listOfLaptop;
     }
+
+
+
 }
