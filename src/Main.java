@@ -4,6 +4,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.xml.stream.XMLStreamException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -88,7 +89,15 @@ public class Main {
         ImportXMLButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImportXMLButtonFunction();
+                try {
+                    try {
+                        ImportXMLButtonFunction();
+                    } catch (XMLStreamException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         SaveXMLButtonData.addActionListener(new ActionListener() {
@@ -151,18 +160,13 @@ public class Main {
             );
         }
     }
-    void ImportXMLButtonFunction(){
+    void ImportXMLButtonFunction() throws FileNotFoundException, XMLStreamException {
         PrintInformationAndSelectXMLFileWithData();
         if(pathToXMLFile!=null){
-            //readData
-            if(scrollPane == null){
-                //showTable();
-                //TableWasChangedListenerCreate();
-            }
-            else {
-                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
-                this.tableWithData.setModel(model);
-            }
+            StAXParser parser = new StAXParser(pathToXMLFile);
+            parser.readData();
+
+
         }
         else {
             JOptionPane.showMessageDialog(
