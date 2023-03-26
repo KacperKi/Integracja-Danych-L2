@@ -69,7 +69,7 @@ public class Main {
         mainFrame.setLayout(null);
         mainFrame.setVisible(true);
     }
-    void CreateListener(){
+    void CreateListener() {
         ImportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -169,7 +169,6 @@ public class Main {
             for(Laptop t: xmlData){
                 dataToTable.add(t.convertClassToArrayList());
             }
-
             if (scrollPane == null) {
                 ShowTable();
                 TableWasChangedListenerCreate();
@@ -187,9 +186,42 @@ public class Main {
         }
     }
     void ExportXMLButtonFunction(){
+        if(tableWithData != null) {
+            XMLFileCreator creator = new XMLFileCreator(tableWithData);
 
+            JFileChooser chooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only xml files", "xml");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(mainFrame);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                this.pathToSaveFile = String.valueOf(chooser.getSelectedFile());
+            }
+            if (pathToSaveFile != null) {
+                File f = new File(pathToSaveFile);
+                if (f.exists()) {
+                    int n = JOptionPane.showConfirmDialog(
+                            mainFrame, "Overwrite the specified file?",
+                            "File exists!",
+                            JOptionPane.YES_NO_OPTION);
+                    if (n == JOptionPane.YES_OPTION) {
+                        //save to xml function
+                        creator.saveToFile(pathToSaveFile);
+                    }
+                } else {
+                    //save to xml function
+                    creator.saveToFile(pathToSaveFile);
+                }
+
+            } else {
+                JOptionPane.showConfirmDialog(
+                        mainFrame,
+                        "Ther's no output file selected!!",
+                        "Error!",
+                        JOptionPane.OK_OPTION
+                );
+            }
+        }
     }
-
     void PrintInformationAndSelectFileWithData(){
         JFileChooser chooser = new JFileChooser(pathToFile);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only txt files", "txt");
@@ -270,7 +302,7 @@ public class Main {
         for(ArrayList<String> t: data){
             j = 0;
             for(String el: t){
-                if(el.equals("")) result[i][j] = "brak";
+                if(el == null || el.equals("")) result[i][j] = "brak";
                 else result[i][j] = el;
                 j++;
             }
