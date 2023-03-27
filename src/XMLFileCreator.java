@@ -57,9 +57,7 @@ public class XMLFileCreator {
 
 
             int counter = 1;
-            System.out.println("Len of data: " + dataFromTable.size());
             for (ArrayList<String> row : dataFromTable) {
-                System.out.println("Len of data in row: " + row.size());
                 rootElement.appendChild(createLaptopElement(doc, row, counter));
                 counter++;
             }
@@ -74,7 +72,6 @@ public class XMLFileCreator {
             // write to console or file
             StreamResult console = new StreamResult(System.out);
             StreamResult file = new StreamResult(new File(pathToExportFile));
-            System.out.println("Path to Export: " + pathToExportFile);
 
             // write data
             transformer.transform(source, console);
@@ -96,8 +93,60 @@ public class XMLFileCreator {
     private static Node createLaptopElement(Document doc, ArrayList<String> row, Integer counter) {
         Element laptop = doc.createElement("laptop");
         laptop.setAttribute("id", counter.toString());
+
         laptop.appendChild(createElements(doc, laptop, "manufacturer", row.get(0)));
-        laptop.appendChild(createElementsWithAtr(doc, laptop, "screen", row.get(1), "touch", row.get(4)));
+
+        Element screen = doc.createElement("screen");
+            screen.setAttribute("touch", row.get(4));
+
+            Element size = doc.createElement("size");
+            size.appendChild(doc.createTextNode(row.get(1)));
+            screen.appendChild(size);
+
+            Element resolution = doc.createElement("resolution");
+            resolution.appendChild(doc.createTextNode(row.get(2)));
+            screen.appendChild(resolution);
+
+            Element type = doc.createElement("type");
+            type.appendChild(doc.createTextNode(row.get(3)));
+            screen.appendChild(type);
+
+        laptop.appendChild(screen);
+
+        Element processor = doc.createElement("processor");
+
+            Element name = doc.createElement("name");
+            name.appendChild(doc.createTextNode(row.get(5)));
+
+            Element physical_cores = doc.createElement("physical_cores");
+            physical_cores.appendChild(doc.createTextNode(row.get(6)));
+
+            Element clock_speed = doc.createElement("clock_speed");
+            clock_speed.appendChild(doc.createTextNode(row.get(7)));
+
+            processor.appendChild(name);
+            processor.appendChild(physical_cores);
+            processor.appendChild(clock_speed);
+        laptop.appendChild(processor);
+
+        laptop.appendChild(createElements(doc, laptop, "ram", row.get(8)));
+
+        Element disc = doc.createElement("disc");
+            disc.setAttribute("type", row.get(10));
+
+            Element storage = doc.createElement("storage");
+            storage.appendChild(doc.createTextNode(row.get(9)));
+
+            disc.appendChild(storage);
+        laptop.appendChild(disc);
+
+        Element graphic_card = doc.createElement("graphic_card");
+            graphic_card.appendChild(createElements(doc, graphic_card, "name", row.get(11)));
+            graphic_card.appendChild(createElements(doc, graphic_card, "memory", row.get(12)));
+        laptop.appendChild(graphic_card);
+
+        laptop.appendChild(createElements(doc, laptop, "os", row.get(13)));
+        laptop.appendChild(createElements(doc, laptop, "disc_reader", row.get(14)));
 
         return laptop;
     }
