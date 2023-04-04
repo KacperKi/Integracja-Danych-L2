@@ -20,6 +20,8 @@ import org.w3c.dom.Node;
 public class XMLFileCreator {
 
     ArrayList<ArrayList<String>> dataFromTable;
+
+    //JTable - variable created in main class to "export" data from jtable
     JTable tableWithData;
 
     public XMLFileCreator(JTable table) {
@@ -27,7 +29,6 @@ public class XMLFileCreator {
         dataFromTable = new ArrayList<>();
         collectData();
     }
-
     void collectData(){
         for(int i=0; i<tableWithData.getRowCount(); i++){
             ArrayList<String> row = new ArrayList<>();
@@ -37,7 +38,6 @@ public class XMLFileCreator {
             this.dataFromTable.add(row);
         }
     }
-
     boolean saveToFile(String pathToExportFile){
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder;
@@ -85,11 +85,6 @@ public class XMLFileCreator {
 
         return false;
     }
-
-
-
-
-
     private static Node createLaptopElement(Document doc, ArrayList<String> row, Integer counter) {
         Element laptop = doc.createElement("laptop");
         laptop.setAttribute("id", counter.toString());
@@ -150,12 +145,6 @@ public class XMLFileCreator {
 
         return laptop;
     }
-
-
-
-
-
-
     private static Node createElements(Document doc, Element element, String name, String value) {
         Element node = doc.createElement(name);
         node.appendChild(doc.createTextNode(value));
