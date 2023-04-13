@@ -8,6 +8,8 @@ import javax.xml.stream.XMLStreamException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +20,9 @@ public class Main {
     public static void main(String[] args){
         new Main();
     }
+
+
+    MySQLConnector mySQLConnector;
     String pathToFile, pathToSaveFile, pathToXMLFile;
     ArrayList<String> nameOfColumnsFromFile = new ArrayList<String>() {
         {
@@ -40,10 +45,11 @@ public class Main {
     };
     ArrayList<ArrayList<String>> dataToTable;
     JFrame mainFrame;
-    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData;
+    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton;
     JTable tableWithData;
     JScrollPane scrollPane;
     DefaultTableModel model;
+    JTextField queryField;
 
     public Main() {
       CreateFrame();
@@ -58,14 +64,25 @@ public class Main {
         ImportXMLButton = new JButton("Import data from XML file");
         SaveXMLButtonData = new JButton("Export data to XML file");
 
+        ConnectToDatabaseButton = new JButton("Connect to Database!");
+
         ImportButton.setBounds(10,5, 200, 30); SaveButtonData.setBounds(220, 5, 200,30);
         mainFrame.add(ImportButton); mainFrame.add(SaveButtonData);
 
         ImportXMLButton.setBounds(430, 5, 200, 30); SaveXMLButtonData.setBounds(640, 5, 200, 30);
+        ImportXMLButton.setBackground(new Color(0, 156, 253, 255)); SaveXMLButtonData.setBackground(new Color(0,156,253,255));
         mainFrame.add(ImportXMLButton); mainFrame.add(SaveXMLButtonData);
 
+        ConnectToDatabaseButton.setBounds(10, 45, 200, 30);
+        ConnectToDatabaseButton.setBackground(new Color(222, 220, 56,100));
+
+        queryField = new JTextField("Type query");
+        queryField.setBounds(220,45, 300, 30);
+        mainFrame.add(queryField);
+        mainFrame.add(ConnectToDatabaseButton);
+
         mainFrame.setLocationRelativeTo(null);
-        mainFrame.setSize(900, 80);
+        mainFrame.setSize(900, 120);
         mainFrame.setLayout(null);
         mainFrame.setVisible(true);
     }
@@ -104,6 +121,22 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ExportXMLButtonFunction();
+            }
+        });
+        ConnectToDatabaseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ConnectToDatabaseButtonFunction();
+            }
+        });
+
+        queryField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    RunQueryFromQueryJTextAfterPressEnter();
+                }
+                super.keyPressed(e);
             }
         });
     }
@@ -222,6 +255,9 @@ public class Main {
             }
         }
     }
+    void ConnectToDatabaseButtonFunction(){
+        mySQLConnector = new MySQLConnector();
+    }
     void PrintInformationAndSelectFileWithData(){
         JFileChooser chooser = new JFileChooser(pathToFile);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only txt files", "txt");
@@ -241,6 +277,11 @@ public class Main {
             System.out.println("You chose to open this file: " + chooser.getSelectedFile());
             pathToXMLFile = String.valueOf(chooser.getSelectedFile());
         }
+    }
+    void RunQueryFromQueryJTextAfterPressEnter(){
+        String query = queryField.getText();
+        System.out.println(query);
+
     }
     void ReadDataFromFile() {
         dataToTable = new ArrayList<>();
@@ -319,7 +360,7 @@ public class Main {
         tableWithData.getTableHeader().setResizingAllowed(false);
 
         scrollPane.setEnabled(true);
-        scrollPane.setBounds(10, 45, 1700, 250);
+        scrollPane.setBounds(10, 85, 1700, 250);
         scrollPane.setVisible(true);
 
         this.mainFrame.add(scrollPane);
