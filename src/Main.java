@@ -20,8 +20,6 @@ public class Main {
     public static void main(String[] args){
         new Main();
     }
-
-
     MySQLConnector mySQLConnector;
     String pathToFile, pathToSaveFile, pathToXMLFile;
     ArrayList<String> nameOfColumnsFromFile = new ArrayList<String>() {
@@ -76,8 +74,9 @@ public class Main {
         ConnectToDatabaseButton.setBounds(10, 45, 200, 30);
         ConnectToDatabaseButton.setBackground(new Color(222, 220, 56,100));
 
-        queryField = new JTextField("Type query");
+        queryField = new JTextField("This function is disabled");
         queryField.setBounds(220,45, 300, 30);
+        queryField.setEditable(false);
         mainFrame.add(queryField);
         mainFrame.add(ConnectToDatabaseButton);
 
@@ -280,7 +279,7 @@ public class Main {
     }
     void RunQueryFromQueryJTextAfterPressEnter(){
         String query = queryField.getText();
-        System.out.println(query);
+        mySQLConnector.runQuery(query);
 
     }
     void ReadDataFromFile() {

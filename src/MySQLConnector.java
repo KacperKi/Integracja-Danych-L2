@@ -11,7 +11,6 @@ public class MySQLConnector {
     public MySQLConnector() {
         init();
     }
-
     private void init(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -27,7 +26,15 @@ public class MySQLConnector {
 
     }
 
+    public void runQuery(String query){
+        try {
+            statement = connect.createStatement();
+            System.out.println(statement.execute(query));
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public void readDataBase() throws Exception {
