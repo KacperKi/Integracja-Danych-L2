@@ -25,7 +25,6 @@ public class MySQLConnector {
         }catch(Exception e){System.out.println("Init Function!\n" + e);}
 
     }
-
     public void runQuery(String query){
         try {
             statement = connect.createStatement();
@@ -35,6 +34,9 @@ public class MySQLConnector {
             throw new RuntimeException(e);
         }
     }
+
+
+
 
 
     public void readDataBase() throws Exception {

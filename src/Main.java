@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.beans.Visibility;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,7 +44,8 @@ public class Main {
     };
     ArrayList<ArrayList<String>> dataToTable;
     JFrame mainFrame;
-    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton;
+    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
+            ImportMySQLButton, ExportMySQLButton;
     JTable tableWithData;
     JScrollPane scrollPane;
     DefaultTableModel model;
@@ -63,20 +65,27 @@ public class Main {
         SaveXMLButtonData = new JButton("Export data to XML file");
 
         ConnectToDatabaseButton = new JButton("Connect to Database!");
+        ImportMySQLButton = new JButton("Import from MySQL");
+        ExportMySQLButton = new JButton("Export to MySQL");
 
-        ImportButton.setBounds(10,5, 200, 30); SaveButtonData.setBounds(220, 5, 200,30);
+        ImportButton.setBounds(10,5, 200, 30); SaveButtonData.setBounds(210, 5, 200,30);
         mainFrame.add(ImportButton); mainFrame.add(SaveButtonData);
 
-        ImportXMLButton.setBounds(430, 5, 200, 30); SaveXMLButtonData.setBounds(640, 5, 200, 30);
+        ImportXMLButton.setBounds(430, 5, 200, 30); SaveXMLButtonData.setBounds(630, 5, 200, 30);
         ImportXMLButton.setBackground(new Color(0, 156, 253, 255)); SaveXMLButtonData.setBackground(new Color(0,156,253,255));
         mainFrame.add(ImportXMLButton); mainFrame.add(SaveXMLButtonData);
 
         ConnectToDatabaseButton.setBounds(10, 45, 200, 30);
-        ConnectToDatabaseButton.setBackground(new Color(222, 220, 56,100));
+//        ConnectToDatabaseButton.setBackground(new Color(222, 220, 56,100));
+
+        ImportMySQLButton.setBounds(210,45,150,30); ExportMySQLButton.setBounds(360,45,150,30);
+//        ImportMySQLButton.setBackground(new Color(222, 220, 56,100)); ExportMySQLButton.setBackground(new Color(222, 220, 56,100));
+        mainFrame.add(ImportMySQLButton);mainFrame.add(ExportMySQLButton);
 
         queryField = new JTextField("This function is disabled");
         queryField.setBounds(220,45, 300, 30);
-        queryField.setEditable(false);
+        queryField.setEditable(false); queryField.setVisible(false);
+
         mainFrame.add(queryField);
         mainFrame.add(ConnectToDatabaseButton);
 
@@ -128,7 +137,6 @@ public class Main {
                 ConnectToDatabaseButtonFunction();
             }
         });
-
         queryField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -136,6 +144,18 @@ public class Main {
                     RunQueryFromQueryJTextAfterPressEnter();
                 }
                 super.keyPressed(e);
+            }
+        });
+        ImportMySQLButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MySQLFunction(true);
+            }
+        });
+        ExportMySQLButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MySQLFunction(false);
             }
         });
     }
@@ -411,6 +431,14 @@ public class Main {
             else return false;
         }
         else return true;
+    }
+    void MySQLFunction(boolean option){
+        //IF TRUE - Import from database
+        if(option){
+
+        }else{
+
+        }
     }
 
 }
