@@ -514,19 +514,27 @@ public class Main {
         ArrayList<ArrayList<String>> currentData = new ArrayList<>();
         ArrayList<String> row;
 
-        for(int i=0; i<tableWithData.getRowCount(); i++){
-            row = new ArrayList<>();
-            for(int j=0; j<tableWithData.getColumnCount();j++){
-                row.add(tableWithData.getModel().getValueAt(i,j).toString());
+        if (scrollPane == null || tableWithData == null) {
+            dataToTable = new ArrayList<>();
+            return new ArrayList<>();
+        } else {
+            for (int i = 0; i < tableWithData.getRowCount(); i++) {
+                row = new ArrayList<>();
+                for (int j = 0; j < tableWithData.getColumnCount(); j++) {
+                    row.add(tableWithData.getModel().getValueAt(i, j).toString());
+                }
+                currentData.add(row);
             }
-            currentData.add(row);
+            return currentData;
         }
-        return currentData;
     }
+
+
     void MySQLFunction(boolean option){
         try {
             if (option) {
                 //IF TRUE - Import from database
+
                 ArrayList<ArrayList<String>> dataFromDataBase = mySQLConnector.readTableFromDB();
 
                 newRecordsFromDatabase = new ArrayList<>(); duplicatedRecordsFromDatabase = new ArrayList<>();
@@ -559,14 +567,24 @@ public class Main {
                     }else{
                         this.rowColors[dataToTable.size()-1] = Color.LIGHT_GRAY;
                     }
+
                 }
-                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
-                this.tableWithData.setModel(model);
-                TableWasChangedListenerCreate();
+
+                if (scrollPane == null || tableWithData == null) {
+                    ShowTable();
+                    TableWasChangedListenerCreate();
+                } else {
+                    this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+                    this.tableWithData.setModel(model);
+                }
+//                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+//                this.tableWithData.setModel(model);
+//                TableWasChangedListenerCreate();
 
             } else {
                 //FALSE - Export from database
-
+                mySQLConnector.runQuery("delete from dane;");
+                mySQLConnector.insertRowToDataBase(getCurrentDataFromTable());
             }
         }catch(Exception e){
             System.out.println(e);

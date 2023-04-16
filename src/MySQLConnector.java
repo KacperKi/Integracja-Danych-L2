@@ -48,14 +48,6 @@ public class MySQLConnector {
             close();
         }
     }
-
-    private void writeMetaData(ResultSet resultSet) throws SQLException {
-        System.out.println("Table: " + resultSet.getMetaData().getTableName(1));
-        for  (int i = 1; i<= resultSet.getMetaData().getColumnCount(); i++){
-            System.out.println("Column " +i  + " "+ resultSet.getMetaData().getColumnName(i));
-        }
-    }
-
     private ArrayList<ArrayList<String>> writeResultSet(ResultSet resultSet) throws SQLException {
         ArrayList<ArrayList<String>> listOfRows = new ArrayList<>();
         ArrayList<String> row;
@@ -82,7 +74,6 @@ public class MySQLConnector {
         System.out.println("Function: writeResultSet\nClass: MySQLConnector\nNumber of rows:" + listOfRows.size());
         return listOfRows;
     }
-
     private void close() {
         try {
             if (resultSet != null) {
@@ -112,6 +103,38 @@ public class MySQLConnector {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+
+    public void insertRowToDataBase(ArrayList<ArrayList<String>> data){
+        try {
+            String sqlQuery = " INSERT INTO dane\n" +
+                    "(manufacturer_name,screen_size,screen_resolution,screen_type,screen_touch,processor_name,processor_physical_cores,processor_clock_speed,ram,disc,disc_type," +
+                    "gpu_name,gpu_memory,name_os,disc_reader) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+            PreparedStatement preparedStmt;
+
+            for(ArrayList<String> row : data) {
+                int i = 1;
+                preparedStmt = connect.prepareStatement(sqlQuery);
+                for (String value : row) {
+                    preparedStmt.setString(i, value);
+                    i++;
+                }
+                preparedStmt.execute();
+            }
+
+
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
+
+
+
+
+
     }
 
 }

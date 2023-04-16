@@ -1,0 +1,101 @@
+[33mcommit 119fefea6b07b1a64b73d3e2d07e6cd17dc20d25[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Sun Apr 16 22:48:07 2023 +0200
+
+    Added: Importing data from MySQL Database
+
+[33mcommit dd11f3104fe2a6e936b3b7869a2e0f933878bda0[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Sun Apr 16 19:14:58 2023 +0200
+
+    JTable - added colors list to color jtable, TODO: listener to change color after modify
+
+[33mcommit d0761925cb488ccdf83b9c0c82478cc33dd916ca[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Fri Apr 14 13:30:47 2023 +0200
+
+    Added function to import and export data from/to MySQL database.
+
+[33mcommit 155abf7c34061deab3d78042708ac76b0166ce43[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Fri Apr 14 10:32:01 2023 +0200
+
+    MySQL Connector - 2nd commit
+
+[33mcommit fa507f739d1254aa17c135830cbe9b5d5f006b4b[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Thu Apr 13 17:11:48 2023 +0200
+
+    MYSQL connection - added mysql connector class with query field to type and run sql query on db
+
+[33mcommit e1c61a796cf5f142fa19563194ef16d833b96471[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Tue Apr 4 11:24:02 2023 +0200
+
+    Project with jar file
+
+[33mcommit 452951f41abb17ed3b4a78d9e5037202dd1c23d3[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 27 22:17:37 2023 +0200
+
+    XML File Import and Export - finised. Application works correctly.
+
+[33mcommit 7357d6d53ec457b8788043f41137728183d82f55[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 27 00:34:02 2023 +0200
+
+    XML file created - ok, todo: function createLaptopElement - add appendchild with attribute
+
+[33mcommit d222dda2ca0dbaeea169c8d64bfbd39786c5757a[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 20 09:01:42 2023 +0100
+
+    Finished module of importing data from XML file
+
+[33mcommit 22dcf8281f9c717beeff10588633e6e953542b73[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 20 01:41:09 2023 +0100
+
+    XML import - convert to laptop class
+
+[33mcommit b9961c3573c4e547008561a8e395e01849334564[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Sun Mar 19 19:50:14 2023 +0100
+
+    Laptop class + StaxParser
+
+[33mcommit f3d6a07670dd5ad8cc8a4c9e6b1f591629f52a0d[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Sun Mar 19 19:23:07 2023 +0100
+
+    XML Parser
+
+[33mcommit d731f2c8a8767f8a1ce99e5b9137da942b00e295[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 13 12:33:03 2023 +0100
+
+    Finish - validation, exporting and importing
+
+[33mcommit 3df77147cf774015d009ccdfc18824947a8b011c[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 13 10:03:47 2023 +0100
+
+    Validation data - ok, to do: export data to txt file
+
+[33mcommit 615abcfdd05de04b49295e3ef99fbf11cb65c934[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 13 08:59:49 2023 +0100
+
+    Validation of changes
+
+[33mcommit 66fd901fde0e97a03ab307c0bb0aa373d8554c4d[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Mon Mar 13 00:13:19 2023 +0100
+
+    GUI with JFile and Update JTable
+
+[33mcommit f85fae3468841702cafbedd61716bbef338a283c[m
+Author: KacperKi <kacperxawer.123@gmail.com>
+Date:   Thu Mar 9 15:25:56 2023 +0100
+
+    Basic application wittout gui
