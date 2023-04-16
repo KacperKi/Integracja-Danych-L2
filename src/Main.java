@@ -570,6 +570,7 @@ public class Main {
 
                 }
 
+                
                 if (scrollPane == null || tableWithData == null) {
                     ShowTable();
                     TableWasChangedListenerCreate();
