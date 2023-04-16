@@ -43,7 +43,9 @@ public class Main {
             add("rodzaj napędu fizycznego");
         }
     };
-    ArrayList<ArrayList<String>> dataToTable, newRecordsFromDatabase;
+    ArrayList<ArrayList<String>> dataToTable,
+                                newRecordsFromDatabase, newRecordsFromTXT, newRecordsFromXML,
+                                duplicatedRecordsFromDatabase, duplicatedRecordsFromTXT, duplicatedRecordsFromXML;
     JFrame mainFrame;
     JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
             ImportMySQLButton, ExportMySQLButton;
@@ -51,19 +53,12 @@ public class Main {
     JScrollPane scrollPane;
     DefaultTableModel model;
     JTextField queryField;
-
     Color[] rowColors;
-//    = new Color[] {
-//            new Color(100,100,100,255),
-//            new Color(100,100,100,255),
-//            new Color(100,100,100,255)};
 
     public Main() {
       CreateFrame();
       CreateListener();
     }
-
-
 
     void CreateFrame(){
         mainFrame = new JFrame("Integracja Systemów - Kacper Kisielewski");
@@ -331,6 +326,7 @@ public class Main {
     }
 
 
+
     void ConnectToDatabaseButtonFunction(){
         mySQLConnector = new MySQLConnector();
 
@@ -362,6 +358,8 @@ public class Main {
         mySQLConnector.runQuery(query);
 
     }
+
+
     void ReadDataFromFile() {
         dataToTable = new ArrayList<>();
         if(dataToTable.size() != 0) dataToTable.clear();
@@ -381,7 +379,6 @@ public class Main {
             System.out.println(e);
         }
     }
-
 
     void TableWasChangedListenerCreate(){
         this.tableWithData.getModel().addTableModelListener(e -> {
@@ -409,15 +406,12 @@ public class Main {
                                     + "\nNew value: " + tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()),
                             "Data was changed!",
                             JOptionPane.INFORMATION_MESSAGE);
-
-
+                    rowColors[e.getFirstRow()] = Color.WHITE;
+                    scrollPane.repaint();
                 }
             }
-
         });
     }
-
-
     Object[][] ConvertDataToObject(ArrayList<ArrayList<String>> data){
         int row = data.size();
         int column = data.get(0).size();
@@ -435,8 +429,6 @@ public class Main {
         }
         return result;
     }
-
-
     void ShowTable(){
         this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
         this.tableWithData = new JTable(model);
@@ -444,12 +436,7 @@ public class Main {
 
         rowColors = new Color[dataToTable.size()];
         for(int i=0; i<dataToTable.size(); i++){
-//            if(i%3 ==0) {
-//                rowColors[i] = Color.RED;
-//            }
-//            else {
-                rowColors[i] = Color.GRAY;
-//            }
+                rowColors[i] = Color.LIGHT_GRAY;
         }
 
         tableWithData.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
@@ -470,16 +457,15 @@ public class Main {
         tableWithData.getTableHeader().setResizingAllowed(false);
 
         scrollPane.setEnabled(true);
-        scrollPane.setBounds(10, 85, 1700, 250);
+        scrollPane.setBounds(10, 85, 1700, 300);
         scrollPane.setVisible(true);
         this.mainFrame.add(scrollPane);
 
-        mainFrame.setSize(1720,340);
+        mainFrame.setSize(1720,440);
         mainFrame.invalidate();
         mainFrame.validate();
         mainFrame.repaint();
     }
-
     void saveToFileData() throws FileNotFoundException {
         PrintWriter output = new PrintWriter(pathToSaveFile);
         String rowToInsert = "";
@@ -524,7 +510,6 @@ public class Main {
         }
         else return true;
     }
-
     ArrayList<ArrayList<String>> getCurrentDataFromTable(){
         ArrayList<ArrayList<String>> currentData = new ArrayList<>();
         ArrayList<String> row;
@@ -538,23 +523,47 @@ public class Main {
         }
         return currentData;
     }
-
     void MySQLFunction(boolean option){
         try {
             if (option) {
                 //IF TRUE - Import from database
                 ArrayList<ArrayList<String>> dataFromDataBase = mySQLConnector.readTableFromDB();
 
-                newRecordsFromDatabase = dataFromDataBase;
+                newRecordsFromDatabase = new ArrayList<>(); duplicatedRecordsFromDatabase = new ArrayList<>();
+
+                for(ArrayList<String> t : dataFromDataBase){
+                    newRecordsFromDatabase.add(t);
+                    duplicatedRecordsFromDatabase.add(t);
+                }
+
                 newRecordsFromDatabase.removeAll(getCurrentDataFromTable());
+                duplicatedRecordsFromDatabase.removeAll(newRecordsFromDatabase);
 
                 JOptionPane.showMessageDialog(
                         mainFrame,
-                        "Found " + newRecordsFromDatabase.size() + " new rows",
+                        "Found " + newRecordsFromDatabase.size() + " new rows" +
+                        "\nFound " + duplicatedRecordsFromDatabase.size() + " duplicated rows",
                         "Imported from Database",
                         JOptionPane.WARNING_MESSAGE);
-                
-                
+
+
+                rowColors = new Color[dataToTable.size()+dataFromDataBase.size()];
+                for(int i=0; i<dataToTable.size(); i++){
+                    rowColors[i] = Color.LIGHT_GRAY;
+                }
+
+                for(ArrayList<String> row : dataFromDataBase){
+                    this.dataToTable.add(row);
+                    if(duplicatedRecordsFromDatabase.contains(row)){
+                        this.rowColors[dataToTable.size()-1] = Color.RED;
+                    }else{
+                        this.rowColors[dataToTable.size()-1] = Color.LIGHT_GRAY;
+                    }
+                }
+                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+                this.tableWithData.setModel(model);
+                TableWasChangedListenerCreate();
+
             } else {
                 //FALSE - Export from database
 
@@ -563,5 +572,7 @@ public class Main {
             System.out.println(e);
         }
     }
+
+
 
 }
