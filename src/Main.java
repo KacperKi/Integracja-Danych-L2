@@ -2,18 +2,19 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.xml.stream.XMLStreamException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.beans.Visibility;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.regex.Matcher;
 
 public class Main {
@@ -42,7 +43,7 @@ public class Main {
             add("rodzaj napędu fizycznego");
         }
     };
-    ArrayList<ArrayList<String>> dataToTable;
+    ArrayList<ArrayList<String>> dataToTable, newRecordsFromDatabase;
     JFrame mainFrame;
     JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
             ImportMySQLButton, ExportMySQLButton;
@@ -51,10 +52,19 @@ public class Main {
     DefaultTableModel model;
     JTextField queryField;
 
+    Color[] rowColors;
+//    = new Color[] {
+//            new Color(100,100,100,255),
+//            new Color(100,100,100,255),
+//            new Color(100,100,100,255)};
+
     public Main() {
       CreateFrame();
       CreateListener();
     }
+
+
+
     void CreateFrame(){
         mainFrame = new JFrame("Integracja Systemów - Kacper Kisielewski");
 
@@ -158,7 +168,52 @@ public class Main {
                 MySQLFunction(false);
             }
         });
+        mainFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    if(mySQLConnector.checkConnection()) {
+                        mySQLConnector.closeConnection();
+                        System.out.println("Connection closed with DB!");
+                    }
+                }catch(Exception w){
+                    System.out.println("Connection is null!");
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+
+            }
+        });
     }
+
+
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
         if(pathToFile!=null) {
@@ -274,8 +329,11 @@ public class Main {
             }
         }
     }
+
+
     void ConnectToDatabaseButtonFunction(){
         mySQLConnector = new MySQLConnector();
+
     }
     void PrintInformationAndSelectFileWithData(){
         JFileChooser chooser = new JFileChooser(pathToFile);
@@ -297,6 +355,8 @@ public class Main {
             pathToXMLFile = String.valueOf(chooser.getSelectedFile());
         }
     }
+
+
     void RunQueryFromQueryJTextAfterPressEnter(){
         String query = queryField.getText();
         mySQLConnector.runQuery(query);
@@ -321,6 +381,8 @@ public class Main {
             System.out.println(e);
         }
     }
+
+
     void TableWasChangedListenerCreate(){
         this.tableWithData.getModel().addTableModelListener(e -> {
             String newValue = tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()).toString();
@@ -348,11 +410,14 @@ public class Main {
                             "Data was changed!",
                             JOptionPane.INFORMATION_MESSAGE);
 
+
                 }
             }
 
         });
     }
+
+
     Object[][] ConvertDataToObject(ArrayList<ArrayList<String>> data){
         int row = data.size();
         int column = data.get(0).size();
@@ -370,10 +435,36 @@ public class Main {
         }
         return result;
     }
+
+
     void ShowTable(){
         this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
         this.tableWithData = new JTable(model);
         this.scrollPane = new JScrollPane(tableWithData, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        rowColors = new Color[dataToTable.size()];
+        for(int i=0; i<dataToTable.size(); i++){
+//            if(i%3 ==0) {
+//                rowColors[i] = Color.RED;
+//            }
+//            else {
+                rowColors[i] = Color.GRAY;
+//            }
+        }
+
+        tableWithData.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+        {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+            {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+//                c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+//                c.setBackground(row == 1 ? Color.RED : Color.LIGHT_GRAY);
+                c.setBackground(rowColors[row]);
+                return c;
+            }
+        });
+
 
         tableWithData.getTableHeader().setReorderingAllowed(false);
         tableWithData.getTableHeader().setResizingAllowed(false);
@@ -381,13 +472,14 @@ public class Main {
         scrollPane.setEnabled(true);
         scrollPane.setBounds(10, 85, 1700, 250);
         scrollPane.setVisible(true);
-
         this.mainFrame.add(scrollPane);
+
         mainFrame.setSize(1720,340);
         mainFrame.invalidate();
         mainFrame.validate();
         mainFrame.repaint();
     }
+
     void saveToFileData() throws FileNotFoundException {
         PrintWriter output = new PrintWriter(pathToSaveFile);
         String rowToInsert = "";
@@ -432,12 +524,43 @@ public class Main {
         }
         else return true;
     }
+
+    ArrayList<ArrayList<String>> getCurrentDataFromTable(){
+        ArrayList<ArrayList<String>> currentData = new ArrayList<>();
+        ArrayList<String> row;
+
+        for(int i=0; i<tableWithData.getRowCount(); i++){
+            row = new ArrayList<>();
+            for(int j=0; j<tableWithData.getColumnCount();j++){
+                row.add(tableWithData.getModel().getValueAt(i,j).toString());
+            }
+            currentData.add(row);
+        }
+        return currentData;
+    }
+
     void MySQLFunction(boolean option){
-        //IF TRUE - Import from database
-        if(option){
+        try {
+            if (option) {
+                //IF TRUE - Import from database
+                ArrayList<ArrayList<String>> dataFromDataBase = mySQLConnector.readTableFromDB();
 
-        }else{
+                newRecordsFromDatabase = dataFromDataBase;
+                newRecordsFromDatabase.removeAll(getCurrentDataFromTable());
 
+                JOptionPane.showMessageDialog(
+                        mainFrame,
+                        "Found " + newRecordsFromDatabase.size() + " new rows",
+                        "Imported from Database",
+                        JOptionPane.WARNING_MESSAGE);
+                
+                
+            } else {
+                //FALSE - Export from database
+
+            }
+        }catch(Exception e){
+            System.out.println(e);
         }
     }
 

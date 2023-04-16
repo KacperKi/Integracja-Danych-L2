@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class MySQLConnector {
 
@@ -34,44 +35,52 @@ public class MySQLConnector {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-
-    public void readDataBase() throws Exception {
+    public ArrayList<ArrayList<String>> readTableFromDB() throws Exception {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/integracja?" + "user=admin&password=");
-//            statement = connect.createStatement();
-//            resultSet = statement.executeQuery("select * from feedback.comments");
-//            writeResultSet(resultSet);
-//
-//            preparedStatement = connect.prepareStatement("insert into  feedback.comments values (default, ?, ?, ?, ? , ?, ?)");
-//            preparedStatement.setString(6, "TestComment");
-//            resultSet = preparedStatement.executeQuery();
-//            writeResultSet(resultSet);
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select * from dane");
+
+            return writeResultSet(resultSet);
 
         } catch (Exception e) {
             throw e;
         } finally {
             close();
         }
-
     }
 
     private void writeMetaData(ResultSet resultSet) throws SQLException {
-
         System.out.println("Table: " + resultSet.getMetaData().getTableName(1));
         for  (int i = 1; i<= resultSet.getMetaData().getColumnCount(); i++){
             System.out.println("Column " +i  + " "+ resultSet.getMetaData().getColumnName(i));
         }
     }
-    private void writeResultSet(ResultSet resultSet) throws SQLException {
+
+    private ArrayList<ArrayList<String>> writeResultSet(ResultSet resultSet) throws SQLException {
+        ArrayList<ArrayList<String>> listOfRows = new ArrayList<>();
+        ArrayList<String> row;
+
         while (resultSet.next()) {
-            String comment = resultSet.getString("comments");
-            System.out.println("Comment: " + comment);
+            row = new ArrayList<>();
+            row.add(resultSet.getString("manufacturer_name"));
+            row.add(resultSet.getString("screen_size"));
+            row.add(resultSet.getString("screen_resolution"));
+            row.add(resultSet.getString("screen_type"));
+            row.add(resultSet.getString("screen_touch"));
+            row.add(resultSet.getString("processor_name"));
+            row.add(resultSet.getString("processor_physical_cores"));
+            row.add(resultSet.getString("processor_clock_speed"));
+            row.add(resultSet.getString("ram"));
+            row.add(resultSet.getString("disc"));
+            row.add(resultSet.getString("disc_type"));
+            row.add(resultSet.getString("gpu_name"));
+            row.add(resultSet.getString("gpu_memory"));
+            row.add(resultSet.getString("name_os"));
+            row.add(resultSet.getString("disc_reader"));
+            listOfRows.add(row);
         }
+        System.out.println("Function: writeResultSet\nClass: MySQLConnector\nNumber of rows:" + listOfRows.size());
+        return listOfRows;
     }
 
     private void close() {
@@ -84,11 +93,24 @@ public class MySQLConnector {
                 statement.close();
             }
 
-            if (connect != null) {
-                connect.close();
-            }
-        } catch (Exception e) {
 
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void closeConnection(){
+        try {
+            connect.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public boolean checkConnection(){
+        try {
+            return !connect.isClosed();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
