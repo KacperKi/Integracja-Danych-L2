@@ -58,6 +58,8 @@ public class Main {
     public Main() {
       CreateFrame();
       CreateListener();
+
+      dataToTable = new ArrayList<>();
     }
 
     void CreateFrame(){
@@ -212,14 +214,7 @@ public class Main {
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
         if(pathToFile!=null) {
-            ReadDataFromFile();                         //Import all data from txt file
-            if (scrollPane == null) {
-                ShowTable();
-                TableWasChangedListenerCreate();
-            } else {
-                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
-                this.tableWithData.setModel(model);
-            }
+            ReadDataFromFile();
         }
         else {
             JOptionPane.showMessageDialog(
@@ -361,11 +356,12 @@ public class Main {
 
 
     void ReadDataFromFile() {
-        dataToTable = new ArrayList<>();
-        if(dataToTable.size() != 0) dataToTable.clear();
-
+        ArrayList<ArrayList<String>> dataFromFile = new ArrayList<>();
+        this.dataToTable = getCurrentDataFromTable();
+        
         String line;
         System.out.println("PATH: " + pathToFile);
+
         try (BufferedReader br = new BufferedReader(new FileReader(pathToFile))) {
             while ((line = br.readLine()) != null) {
                    ArrayList<String> results = new ArrayList<>();
@@ -373,17 +369,61 @@ public class Main {
                    while(results.size() < nameOfColumnsFromFile.size()){
                        results.add("brak");
                    }
-                   dataToTable.add(results);
+                dataFromFile.add(results);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
+
+        newRecordsFromTXT = new ArrayList<>(dataFromFile);
+        duplicatedRecordsFromTXT = new ArrayList<>(dataFromFile);
+
+        System.out.println("Len: " + newRecordsFromTXT.size());
+        System.out.println("Len: " + getCurrentDataFromTable().size());
+
+        newRecordsFromTXT.removeAll(getCurrentDataFromTable());
+
+        duplicatedRecordsFromTXT.removeAll(newRecordsFromTXT);
+
+        JOptionPane.showMessageDialog(
+                mainFrame,
+                "Found " + newRecordsFromTXT.size() + " new rows" +
+                        "\nFound " + duplicatedRecordsFromTXT.size() + " duplicated rows",
+                "Imported from TXT",
+                JOptionPane.WARNING_MESSAGE);
+
+        rowColors = new Color[dataToTable.size()+dataFromFile.size()];
+        for(int i=0; i<dataToTable.size(); i++){
+            rowColors[i] = Color.LIGHT_GRAY;
+        }
+
+        for(ArrayList<String> row : dataFromFile){
+            this.dataToTable.add(row);
+            if(duplicatedRecordsFromTXT.contains(row)){
+                this.rowColors[dataToTable.size()-1] = Color.RED;
+            }else{
+                this.rowColors[dataToTable.size()-1] = Color.LIGHT_GRAY;
+            }
+        }
+
+        if (scrollPane == null || tableWithData == null) {
+            ShowTable();
+            TableWasChangedListenerCreate();
+        } else {
+            this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
+            this.tableWithData.setModel(model);
+            TableWasChangedListenerCreate();
+        }
+        TableWasChangedListenerCreate();
+
     }
 
     void TableWasChangedListenerCreate(){
         this.tableWithData.getModel().addTableModelListener(e -> {
             String newValue = tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()).toString();
             if(!dataToTable.get(e.getLastRow()).get(e.getColumn()).equals(newValue)) {
+                System.out.println("LIST");
+
                 if(!ValidateDataInTable(e.getColumn(), newValue)){
                     //Information about validation!
                     JOptionPane.showMessageDialog(
@@ -408,6 +448,8 @@ public class Main {
                             JOptionPane.INFORMATION_MESSAGE);
                     rowColors[e.getFirstRow()] = Color.WHITE;
                     scrollPane.repaint();
+                    System.out.println("White color set");
+
                 }
             }
         });
@@ -529,7 +571,6 @@ public class Main {
         }
     }
 
-
     void MySQLFunction(boolean option){
         try {
             if (option) {
@@ -537,12 +578,15 @@ public class Main {
 
                 ArrayList<ArrayList<String>> dataFromDataBase = mySQLConnector.readTableFromDB();
 
+                this.duplicatedRecordsFromTXT = new ArrayList<>();
+                this.duplicatedRecordsFromXML = new ArrayList<>();
+                this.newRecordsFromTXT = new ArrayList<>();
+                this.newRecordsFromXML = new ArrayList<>();
+
                 newRecordsFromDatabase = new ArrayList<>(); duplicatedRecordsFromDatabase = new ArrayList<>();
 
-                for(ArrayList<String> t : dataFromDataBase){
-                    newRecordsFromDatabase.add(t);
-                    duplicatedRecordsFromDatabase.add(t);
-                }
+                newRecordsFromDatabase = new ArrayList<>(dataFromDataBase);
+                duplicatedRecordsFromDatabase = new ArrayList<>(dataFromDataBase);
 
                 newRecordsFromDatabase.removeAll(getCurrentDataFromTable());
                 duplicatedRecordsFromDatabase.removeAll(newRecordsFromDatabase);
@@ -567,10 +611,8 @@ public class Main {
                     }else{
                         this.rowColors[dataToTable.size()-1] = Color.LIGHT_GRAY;
                     }
-
                 }
 
-                
                 if (scrollPane == null || tableWithData == null) {
                     ShowTable();
                     TableWasChangedListenerCreate();
@@ -578,14 +620,16 @@ public class Main {
                     this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
                     this.tableWithData.setModel(model);
                 }
-//                this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
-//                this.tableWithData.setModel(model);
-//                TableWasChangedListenerCreate();
+                TableWasChangedListenerCreate();
 
             } else {
                 //FALSE - Export from database
                 mySQLConnector.runQuery("delete from dane;");
-                mySQLConnector.insertRowToDataBase(getCurrentDataFromTable());
+                ArrayList<ArrayList<String>> dataToExport = new ArrayList<>(getCurrentDataFromTable());
+
+                dataToExport.removeAll(duplicatedRecordsFromDatabase);
+                mySQLConnector.insertRowToDataBase(dataToExport);
+
             }
         }catch(Exception e){
             System.out.println(e);
