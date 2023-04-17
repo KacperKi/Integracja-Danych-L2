@@ -45,7 +45,9 @@ public class Main {
     };
     ArrayList<ArrayList<String>> dataToTable,
                                 newRecordsFromDatabase, newRecordsFromTXT, newRecordsFromXML,
-                                duplicatedRecordsFromDatabase, duplicatedRecordsFromTXT, duplicatedRecordsFromXML;
+                                duplicatedRecordsFromDatabase, duplicatedRecordsFromTXT, duplicatedRecordsFromXML,
+                                duplicatedRowsInDatabase;
+
     JFrame mainFrame;
     JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
             ImportMySQLButton, ExportMySQLButton;
@@ -262,16 +264,50 @@ public class Main {
         if(pathToXMLFile!=null){
             StAXParser parser = new StAXParser(pathToXMLFile);
             ArrayList<Laptop> xmlData = parser.readDatafromFile();
-            dataToTable = new ArrayList<>();
+
+            ArrayList<ArrayList<String>> dataFromXML = new ArrayList<>();
+
             for(Laptop t: xmlData){
-                dataToTable.add(t.convertClassToArrayList());
+                dataFromXML.add(t.convertClassToArrayList());
             }
-            if (scrollPane == null) {
+
+            newRecordsFromXML = new ArrayList<>(dataFromXML);
+            duplicatedRecordsFromXML = new ArrayList<>(dataFromXML);
+
+            newRecordsFromXML.removeAll(dataFromXML);
+            duplicatedRecordsFromXML.removeAll(newRecordsFromXML);
+
+            this.duplicatedRowsInDatabase = new ArrayList<>(duplicatedRecordsFromXML);
+            this.dataToTable.removeAll(duplicatedRowsInDatabase);
+
+            JOptionPane.showMessageDialog(
+                    mainFrame,
+                    "Found " + newRecordsFromXML.size() + " new rows" +
+                            "\nFound " + duplicatedRecordsFromXML.size() + " duplicated rows",
+                    "Imported from XML",
+                    JOptionPane.WARNING_MESSAGE);
+
+            rowColors = new Color[dataToTable.size()+dataFromXML.size()];
+            for(int i=0; i<dataToTable.size(); i++){
+                rowColors[i] = Color.LIGHT_GRAY;
+            }
+
+            for(ArrayList<String> row : dataFromXML){
+                this.dataToTable.add(row);
+                if(duplicatedRecordsFromXML.contains(row)){
+                    this.rowColors[dataToTable.size()-1] = Color.RED;
+                }else{
+                    this.rowColors[dataToTable.size()-1] = Color.LIGHT_GRAY;
+                }
+            }
+
+            if (scrollPane == null || tableWithData == null) {
                 ShowTable();
                 TableWasChangedListenerCreate();
             } else {
                 this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
                 this.tableWithData.setModel(model);
+                TableWasChangedListenerCreate();
             }
         }
         else {
@@ -284,6 +320,7 @@ public class Main {
     }
     void ExportXMLButtonFunction(){
         if(tableWithData != null) {
+            this.dataToTable.removeAll(duplicatedRowsInDatabase);
             XMLFileCreator creator = new XMLFileCreator(tableWithData);
 
             JFileChooser chooser = new JFileChooser();
@@ -319,13 +356,20 @@ public class Main {
             }
         }
     }
-
-
-
     void ConnectToDatabaseButtonFunction(){
         mySQLConnector = new MySQLConnector();
+        String information;
+        if(mySQLConnector.checkConnection()) {
+            information = "Connected to MySQL Database.\nSchema: IntegracjeDanych\nFounded tables: dane";
+        }else{
+            information = "Problem with connection";
+        }
 
+        JOptionPane.showMessageDialog(mainFrame,information,"Information about connection!",JOptionPane.INFORMATION_MESSAGE);
     }
+
+
+
     void PrintInformationAndSelectFileWithData(){
         JFileChooser chooser = new JFileChooser(pathToFile);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Select only txt files", "txt");
@@ -358,7 +402,7 @@ public class Main {
     void ReadDataFromFile() {
         ArrayList<ArrayList<String>> dataFromFile = new ArrayList<>();
         this.dataToTable = getCurrentDataFromTable();
-        
+
         String line;
         System.out.println("PATH: " + pathToFile);
 
@@ -375,15 +419,18 @@ public class Main {
             System.out.println(e);
         }
 
+
+        Object[][] dataAfterValidation = ConvertDataToObject(dataFromFile);
+        dataFromFile = new ArrayList<>(ConvertObjectToArray(dataAfterValidation, dataFromFile.size()));
+
         newRecordsFromTXT = new ArrayList<>(dataFromFile);
         duplicatedRecordsFromTXT = new ArrayList<>(dataFromFile);
 
-        System.out.println("Len: " + newRecordsFromTXT.size());
-        System.out.println("Len: " + getCurrentDataFromTable().size());
-
-        newRecordsFromTXT.removeAll(getCurrentDataFromTable());
-
+        newRecordsFromTXT.removeAll(dataToTable);
         duplicatedRecordsFromTXT.removeAll(newRecordsFromTXT);
+
+        this.duplicatedRowsInDatabase = new ArrayList<>(duplicatedRecordsFromTXT);
+        this.dataToTable.removeAll(duplicatedRowsInDatabase);
 
         JOptionPane.showMessageDialog(
                 mainFrame,
@@ -422,7 +469,6 @@ public class Main {
         this.tableWithData.getModel().addTableModelListener(e -> {
             String newValue = tableWithData.getModel().getValueAt(e.getFirstRow(), e.getColumn()).toString();
             if(!dataToTable.get(e.getLastRow()).get(e.getColumn()).equals(newValue)) {
-                System.out.println("LIST");
 
                 if(!ValidateDataInTable(e.getColumn(), newValue)){
                     //Information about validation!
@@ -453,6 +499,9 @@ public class Main {
                 }
             }
         });
+
+
+        tableWithData.setSelectionBackground(new Color(255, 249, 49, 255));
     }
     Object[][] ConvertDataToObject(ArrayList<ArrayList<String>> data){
         int row = data.size();
@@ -471,6 +520,20 @@ public class Main {
         }
         return result;
     }
+    ArrayList<ArrayList<String>> ConvertObjectToArray(Object[][] data, int size){
+        ArrayList<ArrayList<String>> newData = new ArrayList<>();
+        ArrayList<String> row = new ArrayList<>();
+        for(int i = 0; i<size; i++){
+            row = new ArrayList<>();
+            for(int j =0 ; j<15; j++){
+                row.add(data[i][j].toString());
+            }
+            newData.add(row);
+        }
+        return newData;
+    }
+
+
     void ShowTable(){
         this.model = new DefaultTableModel(ConvertDataToObject(dataToTable), nameOfColumnsFromFile.toArray());
         this.tableWithData = new JTable(model);
@@ -508,9 +571,12 @@ public class Main {
         mainFrame.validate();
         mainFrame.repaint();
     }
+
+
     void saveToFileData() throws FileNotFoundException {
         PrintWriter output = new PrintWriter(pathToSaveFile);
         String rowToInsert = "";
+
 
         for(int i=0; i<tableWithData.getRowCount(); i++){
             rowToInsert = "";
@@ -591,6 +657,9 @@ public class Main {
                 newRecordsFromDatabase.removeAll(getCurrentDataFromTable());
                 duplicatedRecordsFromDatabase.removeAll(newRecordsFromDatabase);
 
+                this.duplicatedRecordsFromDatabase = new ArrayList<>(duplicatedRecordsFromDatabase);
+                this.dataToTable.removeAll(duplicatedRowsInDatabase);
+
                 JOptionPane.showMessageDialog(
                         mainFrame,
                         "Found " + newRecordsFromDatabase.size() + " new rows" +
@@ -627,8 +696,14 @@ public class Main {
                 mySQLConnector.runQuery("delete from dane;");
                 ArrayList<ArrayList<String>> dataToExport = new ArrayList<>(getCurrentDataFromTable());
 
-                dataToExport.removeAll(duplicatedRecordsFromDatabase);
+                dataToExport.removeAll(duplicatedRowsInDatabase);
                 mySQLConnector.insertRowToDataBase(dataToExport);
+
+                JOptionPane.showMessageDialog(
+                        mainFrame,
+                        "Successful saved to database!",
+                        "Exported to Database",
+                        JOptionPane.INFORMATION_MESSAGE);
 
             }
         }catch(Exception e){
