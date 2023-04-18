@@ -1,3 +1,5 @@
+import com.sun.jdi.ArrayReference;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -641,7 +643,7 @@ public class Main {
         try {
             if (option) {
                 //IF TRUE - Import from database
-
+                dataToTable = new ArrayList<>();
                 ArrayList<ArrayList<String>> dataFromDataBase = mySQLConnector.readTableFromDB();
 
                 this.duplicatedRecordsFromTXT = new ArrayList<>();
@@ -658,7 +660,7 @@ public class Main {
                 duplicatedRecordsFromDatabase.removeAll(newRecordsFromDatabase);
 
                 this.duplicatedRecordsFromDatabase = new ArrayList<>(duplicatedRecordsFromDatabase);
-                this.dataToTable.removeAll(duplicatedRowsInDatabase);
+                this.dataToTable.removeAll(duplicatedRecordsFromDatabase);
 
                 JOptionPane.showMessageDialog(
                         mainFrame,
@@ -696,7 +698,7 @@ public class Main {
                 mySQLConnector.runQuery("delete from dane;");
                 ArrayList<ArrayList<String>> dataToExport = new ArrayList<>(getCurrentDataFromTable());
 
-                dataToExport.removeAll(duplicatedRowsInDatabase);
+                dataToExport.removeAll(duplicatedRecordsFromDatabase);
                 mySQLConnector.insertRowToDataBase(dataToExport);
 
                 JOptionPane.showMessageDialog(
@@ -706,8 +708,9 @@ public class Main {
                         JOptionPane.INFORMATION_MESSAGE);
 
             }
-        }catch(Exception e){
-            System.out.println(e);
+        }
+        catch(Exception e){
+            System.out.println("BAza: " + e);
         }
     }
 
