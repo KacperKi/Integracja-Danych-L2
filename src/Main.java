@@ -50,7 +50,7 @@ public class Main {
                                 duplicatedRecordsFromDatabase, duplicatedRecordsFromTXT, duplicatedRecordsFromXML,
                                 duplicatedRowsInDatabase;
 
-    JFrame mainFrame;
+    JFrame mainFrame, userFrame;
     JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
             ImportMySQLButton, ExportMySQLButton;
     JTable tableWithData;
@@ -62,6 +62,9 @@ public class Main {
     public Main() {
       CreateFrame();
       CreateListener();
+
+      CreateClientFrame();
+      CreateUserListener();
 
       dataToTable = new ArrayList<>();
     }
@@ -214,6 +217,18 @@ public class Main {
         });
     }
 
+    void CreateClientFrame(){
+        userFrame = new JFrame("Integracja Systemów - Aplikacja Klienta - Kacper Kisielewski");
+
+        
+        userFrame.setLocationRelativeTo(null);
+        userFrame.setSize(900, 120);
+        userFrame.setLayout(null);
+        userFrame.setVisible(true);
+    }
+    void CreateUserListener(){
+
+    }
 
     void ImportButtonFunction(){
         PrintInformationAndSelectFileWithData();    //Select correct TXT file
