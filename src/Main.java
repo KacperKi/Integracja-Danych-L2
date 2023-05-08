@@ -1,6 +1,7 @@
 import com.sun.jdi.ArrayReference;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -51,8 +52,11 @@ public class Main {
                                 duplicatedRowsInDatabase;
 
     JFrame mainFrame, userFrame;
-    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton,
-            ImportMySQLButton, ExportMySQLButton;
+    JButton ImportButton, SaveButtonData, ImportXMLButton, SaveXMLButtonData, ConnectToDatabaseButton, ImportMySQLButton, ExportMySQLButton,
+            ClientNumberOfLaptopWithProducer, ClientNumberOfLaptopWithMatrix, ClientNumberOfLaptopWithProportions;
+    JComboBox ClientProducerBox, ClientMatrixBox, ClientProportionsBox;
+
+    JLabel ProducerInfo, MatrixInfo, ProportionsInfo, ProducerNumberResult, MatrixNumberResult, ProportionsNumberResult;
     JTable tableWithData;
     JScrollPane scrollPane;
     DefaultTableModel model;
@@ -220,9 +224,45 @@ public class Main {
     void CreateClientFrame(){
         userFrame = new JFrame("Integracja Systemów - Aplikacja Klienta - Kacper Kisielewski");
 
-        
+        ClientNumberOfLaptopWithMatrix = new JButton("Number of matrix");
+        ClientNumberOfLaptopWithProducer = new JButton("Number of producer");
+        ClientNumberOfLaptopWithProportions = new JButton("Number of proportions");
+
+        String[] ProportionsListElements = {"wd", "wd"};
+        String[] MatrixListElements = {"we"};
+        String[] ProducerListElements = {"we"};
+
+        ClientProportionsBox = new JComboBox(ProportionsListElements);
+        ClientMatrixBox = new JComboBox(MatrixListElements);
+        ClientProducerBox = new JComboBox(ProducerListElements);
+
+        ClientProportionsBox.setBounds(10,5, 200, 30); ClientNumberOfLaptopWithProportions.setBounds(210, 5, 200,30);
+        ClientProducerBox.setBounds(430, 5, 200, 30); ClientNumberOfLaptopWithProducer.setBounds(630, 5, 200, 30);
+        ClientMatrixBox.setBounds(850,5,200,30); ClientNumberOfLaptopWithMatrix.setBounds(1050,5,200,30);
+
+        ProducerInfo = new JLabel("Number of producer"); ProducerInfo.setBounds(10,45,150,30);
+        ProducerNumberResult = new JLabel("na"); ProducerNumberResult.setBounds(170,45,25,30);
+
+        MatrixInfo = new JLabel("Number of matrix"); MatrixInfo.setBounds(430,45,150,30);
+        MatrixNumberResult = new JLabel("na"); MatrixNumberResult.setBounds(590,45,25,30);
+
+        ProportionsInfo = new JLabel("Number of proportions"); ProportionsInfo.setBounds(850,45,150,30);
+        ProportionsNumberResult = new JLabel("na"); ProportionsNumberResult.setBounds(1010,45,25,30);
+
+        userFrame.add(ClientNumberOfLaptopWithProportions); userFrame.add(ClientNumberOfLaptopWithMatrix); userFrame.add(ClientNumberOfLaptopWithProducer);
+        userFrame.add(ClientProportionsBox); userFrame.add(ClientMatrixBox); userFrame.add(ClientProducerBox);
+
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        Border yellowLine = BorderFactory.createLineBorder(Color.yellow);
+
+        ProducerInfo.setBorder(blackline); MatrixInfo.setBorder(blackline); ProportionsInfo.setBorder(blackline);
+//        ProducerNumberResult.setBorder(yellowLine); ProportionsNumberResult.setBorder(yellowLine); MatrixNumberResult.setBorder(yellowLine);
+
+        userFrame.add(ProducerInfo); userFrame.add(MatrixInfo); userFrame.add(ProportionsInfo);
+        userFrame.add(ProducerNumberResult); userFrame.add(ProportionsNumberResult); userFrame.add(MatrixNumberResult);
+
         userFrame.setLocationRelativeTo(null);
-        userFrame.setSize(900, 120);
+        userFrame.setSize(1260, 120);
         userFrame.setLayout(null);
         userFrame.setVisible(true);
     }
