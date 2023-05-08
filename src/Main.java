@@ -228,9 +228,9 @@ public class Main {
         ClientNumberOfLaptopWithProducer = new JButton("Number of producer");
         ClientNumberOfLaptopWithProportions = new JButton("Number of proportions");
 
-        String[] ProportionsListElements = {"wd", "wd"};
-        String[] MatrixListElements = {"we"};
-        String[] ProducerListElements = {"we"};
+        String[] ProportionsListElements = {"16x9", "16x10", "4x3", "21x9", "1x1"};
+        String[] MatrixListElements = {"matowa", "błyszcząca"};
+        String[] ProducerListElements = {"Asus", "Dell", "Hp", "Xiaomi"};
 
         ClientProportionsBox = new JComboBox(ProportionsListElements);
         ClientMatrixBox = new JComboBox(MatrixListElements);
