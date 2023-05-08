@@ -107,8 +107,8 @@ public class Main {
         mainFrame.add(queryField);
         mainFrame.add(ConnectToDatabaseButton);
 
-        mainFrame.setLocationRelativeTo(null);
         mainFrame.setSize(900, 120);
+        mainFrame.setLocationRelativeTo(null);
         mainFrame.setLayout(null);
         mainFrame.setVisible(true);
     }
@@ -240,13 +240,13 @@ public class Main {
         ClientProducerBox.setBounds(430, 5, 200, 30); ClientNumberOfLaptopWithProducer.setBounds(630, 5, 200, 30);
         ClientMatrixBox.setBounds(850,5,200,30); ClientNumberOfLaptopWithMatrix.setBounds(1050,5,200,30);
 
-        ProducerInfo = new JLabel("Number of producer"); ProducerInfo.setBounds(10,45,150,30);
+        ProducerInfo = new JLabel("Number of producer", SwingConstants.CENTER); ProducerInfo.setBounds(10,45,150,30);
         ProducerNumberResult = new JLabel("na"); ProducerNumberResult.setBounds(170,45,25,30);
 
-        MatrixInfo = new JLabel("Number of matrix"); MatrixInfo.setBounds(430,45,150,30);
+        MatrixInfo = new JLabel("Number of matrix", SwingConstants.CENTER); MatrixInfo.setBounds(430,45,150,30);
         MatrixNumberResult = new JLabel("na"); MatrixNumberResult.setBounds(590,45,25,30);
 
-        ProportionsInfo = new JLabel("Number of proportions"); ProportionsInfo.setBounds(850,45,150,30);
+        ProportionsInfo = new JLabel("Number of proportions", SwingConstants.CENTER); ProportionsInfo.setBounds(850,45,150,30);
         ProportionsNumberResult = new JLabel("na"); ProportionsNumberResult.setBounds(1010,45,25,30);
 
         userFrame.add(ClientNumberOfLaptopWithProportions); userFrame.add(ClientNumberOfLaptopWithMatrix); userFrame.add(ClientNumberOfLaptopWithProducer);
@@ -261,8 +261,11 @@ public class Main {
         userFrame.add(ProducerInfo); userFrame.add(MatrixInfo); userFrame.add(ProportionsInfo);
         userFrame.add(ProducerNumberResult); userFrame.add(ProportionsNumberResult); userFrame.add(MatrixNumberResult);
 
-        userFrame.setLocationRelativeTo(null);
-        userFrame.setSize(1260, 120);
+        userFrame.setSize(1280, 120);
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        userFrame.setLocation(dim.width/2 - userFrame.getWidth()/2, dim.height/2 + userFrame.getHeight());
+//        userFrame.setLocationRelativeTo(null);
         userFrame.setLayout(null);
         userFrame.setVisible(true);
     }

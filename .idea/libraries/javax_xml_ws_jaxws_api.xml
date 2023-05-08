@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="javax.xml.ws.jaxws.api" type="repository">
+    <properties maven-id="javax.xml.ws:jaxws-api:2.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/jaxws-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxb-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/stax-api-1.0-2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/activation-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
