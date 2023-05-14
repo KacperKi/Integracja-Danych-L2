@@ -16,5 +16,7 @@
     <orderEntry type="library" name="sun.xml.ws.rt1" level="project" />
     <orderEntry type="library" name="EasyWSDLLib" level="project" />
     <orderEntry type="library" name="appverse.web.tools.jaxws.client.jax.ws.stub.generator" level="project" />
+    <orderEntry type="library" name="codehaus.xfire.jaxws" level="project" />
+    <orderEntry type="library" name="java" level="project" />
   </component>
 </module>

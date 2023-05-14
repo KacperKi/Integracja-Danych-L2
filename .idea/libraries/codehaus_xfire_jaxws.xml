@@ -1,0 +1,48 @@
+<component name="libraryTable">
+  <library name="codehaus.xfire.jaxws" type="repository">
+    <properties maven-id="org.codehaus.xfire:xfire-jaxws:1.2.6" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/xfire-jaxws-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/activation-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-aegis-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/stax-utils-20040917.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxws-api-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxb-api-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jsr173_api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-core-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mail-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/wsdl4j-1.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxen-1.1-beta-9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xmlParserAPIs-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xercesImpl-2.6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/stax-api-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-codec-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/XmlSchema-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/wstx-asl-3.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jdom-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.0.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-httpclient-3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-jaxb2-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxb-xjc-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jaxb-impl-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/saaj-impl-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-java5-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-jsr181-api-1.0-M1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-generator-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-spring-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xbean-spring-2.8.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/spring-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-xmlbeans-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xbean-2.2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/xfire-annotations-1.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-beanutils-1.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-attributes-api-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ant-1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/qdox-1.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/saaj-api-1.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

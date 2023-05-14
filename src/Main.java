@@ -58,6 +58,8 @@ public class Main {
       System.out.println("User App Started");
 
       dataToTable = new ArrayList<>();
+      newRecordsFromDatabase = new ArrayList<>(); duplicatedRecordsFromDatabase = new ArrayList<>();
+
     }
 
     void CreateFrame(){
@@ -700,7 +702,6 @@ public class Main {
                         "Successful saved to database!",
                         "Exported to Database",
                         JOptionPane.INFORMATION_MESSAGE);
-
             }
         }
         catch(Exception e){
