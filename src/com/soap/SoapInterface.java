@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public interface SoapInterface {
     @WebMethod Integer getNumberOfProducer(String producer);
     @WebMethod
-    ArrayList<ArrayList<String>> getDataMatrix(String matrix);
+    String[] getDataMatrix(String matrix);
     @WebMethod Integer getNumberOfProportions(String proportions);
 
 }

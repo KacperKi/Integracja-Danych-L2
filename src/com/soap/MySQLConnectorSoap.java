@@ -33,7 +33,8 @@ public class MySQLConnectorSoap {
         try {
             statement = connect.createStatement();
             ResultSet rs = statement.executeQuery(query);
-            return rs.getInt("count(*)");
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

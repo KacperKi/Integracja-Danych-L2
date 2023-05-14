@@ -15,14 +15,28 @@ public class SoapWS implements SoapInterface{
     }
     @Override
     public Integer getNumberOfProducer(String producer) {
+        System.out.println("Log: " + producer);
         String query = "select count(*) from dane where manufacturer_name = '" + producer + "';";
         return mySQLConnectorSoap.getNumberOfSth(query);
     }
 
     @Override
-    public ArrayList<ArrayList<String>> getDataMatrix(String matrix) {
+    public String[] getDataMatrix(String matrix) {
         try {
-            return mySQLConnectorSoap.readDataFromDB(matrix);
+
+            ArrayList<ArrayList<String>> tmp = mySQLConnectorSoap.readDataFromDB(matrix);
+            String[] dataToRet = new String[tmp.size()*15];
+            int increment=0;
+
+            for(ArrayList<String> se: tmp){
+                for(String st: se){
+                    dataToRet[increment]=st;
+                    increment++;
+                }
+            }
+
+            return dataToRet;
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
