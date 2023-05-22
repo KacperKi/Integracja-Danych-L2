@@ -55,6 +55,23 @@ public class MySQLConnectorSoap {
             close();
         }
     }
+
+    public ArrayList<String> readResolutionFromDB(){
+        ArrayList<String> t = new ArrayList<>();
+        try {
+            statement = connect.createStatement();
+
+            String query = "select screen_resolution from dane;";
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                t.add(resultSet.getString(1));
+            }
+            return t;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     private ArrayList<ArrayList<String>> writeResultSet(ResultSet resultSet) throws SQLException {
         ArrayList<ArrayList<String>> listOfRows = new ArrayList<>();
         ArrayList<String> row;

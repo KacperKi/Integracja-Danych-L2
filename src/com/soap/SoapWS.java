@@ -45,6 +45,20 @@ public class SoapWS implements SoapInterface{
     @Override
     public Integer getNumberOfProportions(String proportions) {
         String query = "select count(*) from dane where screen_resolution = '" + proportions + "';";
-        return mySQLConnectorSoap.getNumberOfSth(query);
+        String queryAll = "select screen_resolution from dane;";
+        int counter = 0;
+        ArrayList<String> dataFromDB = mySQLConnectorSoap.readResolutionFromDB();
+        for(String singleRow : dataFromDB){
+            if(singleRow.equals("brak") || singleRow.equals("")){
+
+            }else{
+                String[] params = singleRow.split("x");
+                int n1 = Integer.valueOf(params[0]);
+                int n2 = Integer.valueOf(params[1]);
+                float c1 = Float.valueOf(n1)/Float.valueOf(n2);
+                if(String.valueOf(c1).equals(proportions)) counter++;
+            }
+        }
+        return counter;
     }
 }

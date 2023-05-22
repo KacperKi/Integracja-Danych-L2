@@ -1,0 +1,34 @@
+Manifest-Version: 1.0
+Main-Class: com.example.api.RestApp
+Class-Path: log4j-to-slf4j-2.14.1.jar jaxb-runtime-2.3.5.jar istack-comm
+ ons-runtime-3.0.12.jar spring-data-commons-2.5.6.jar jul-to-slf4j-1.7.3
+ 2.jar tomcat-embed-core-9.0.54.jar springfox-swagger-ui-2.9.2.jar sprin
+ gfox-swagger2-2.9.2.jar javax.persistence-api-2.2.jar spring-plugin-cor
+ e-1.2.0.RELEASE.jar spring-boot-starter-tomcat-2.5.6.jar jackson-annota
+ tions-2.12.5.jar slf4j-api-1.7.32.jar aspectjweaver-1.9.7.jar spring-bo
+ ot-starter-jdbc-2.5.6.jar spring-boot-starter-logging-2.5.6.jar jackson
+ -module-parameter-names-2.12.5.jar spring-jdbc-5.3.12.jar logback-core-
+ 1.2.6.jar tomcat-embed-el-9.0.54.jar spring-aop-5.3.12.jar jakarta.tran
+ saction-api-1.3.3.jar spring-aspects-5.3.12.jar classmate-1.5.1.jar spr
+ ing-beans-5.3.12.jar antlr-2.7.7.jar spring-expression-5.3.12.jar sprin
+ g-orm-5.3.12.jar spring-web-5.3.12.jar guava-20.0.jar spring-plugin-met
+ adata-1.2.0.RELEASE.jar springfox-spring-web-2.9.2.jar springfox-spi-2.
+ 9.2.jar hibernate-core-5.4.32.Final.jar log4j-api-2.14.1.jar javassist-
+ 3.27.0-GA.jar jackson-core-2.12.5.jar jackson-datatype-jsr310-2.12.5.ja
+ r jackson-datatype-jdk8-2.12.5.jar spring-boot-starter-json-2.5.6.jar H
+ ikariCP-4.0.3.jar dom4j-2.1.3.jar lombok-1.18.22.jar jboss-logging-3.4.
+ 2.Final.jar spring-tx-5.3.12.jar spring-boot-starter-data-jpa-2.5.6.jar
+  jakarta.annotation-api-1.3.5.jar txw2-2.3.5.jar mysql-connector-java-8
+ .0.27.jar tomcat-embed-websocket-9.0.54.jar swagger-models-1.5.20.jar s
+ pringfox-core-2.9.2.jar spring-webmvc-5.3.12.jar jakarta.activation-api
+ -1.2.2.jar jakarta.activation-1.2.2.jar swagger-annotations-1.5.20.jar 
+ spring-boot-2.5.6.jar jakarta.xml.bind-api-2.3.3.jar byte-buddy-1.10.22
+ .jar validation-api-2.0.1.Final.jar spring-boot-starter-2.5.6.jar sprin
+ g-data-jpa-2.5.6.jar spring-jcl-5.3.12.jar logback-classic-1.2.6.jar ma
+ pstruct-1.2.0.Final.jar spring-boot-starter-web-2.5.6.jar jackson-datab
+ ind-2.12.5.jar jandex-2.2.3.Final.jar hibernate-commons-annotations-5.1
+ .2.Final.jar spring-context-5.3.12.jar spring-core-5.3.12.jar snakeyaml
+ -1.28.jar springfox-swagger-common-2.9.2.jar jakarta.persistence-api-2.
+ 2.3.jar springfox-schema-2.9.2.jar spring-boot-starter-aop-2.5.6.jar sp
+ ring-boot-autoconfigure-2.5.6.jar h2-1.4.200.jar
+
